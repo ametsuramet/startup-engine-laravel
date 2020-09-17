@@ -17,7 +17,7 @@ class TrackController extends Controller
     {
         $req = new CoreModule(env("APP_ID"));
         $req->setToken($request->header("token"));
-        $data = $req->getList($request->all());
+        $data = $req->getList("location", $request->all());
         return response()->json($data);
     }
 
@@ -28,7 +28,7 @@ class TrackController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -39,7 +39,11 @@ class TrackController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $req = new CoreModule(env("APP_ID"));
+        $req->setToken($request->header("token"));
+        
+        $data = $req->create("location", $request->all());
+        return response()->json($data);
     }
 
     /**
@@ -48,9 +52,13 @@ class TrackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $req = new CoreModule(env("APP_ID"));
+        $req->setToken($request->header("token"));
+        
+        $data = $req->show("location", $id);
+        return response()->json($data);
     }
 
     /**
@@ -73,7 +81,11 @@ class TrackController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $req = new CoreModule(env("APP_ID"));
+        $req->setToken($request->header("token"));
+        
+        $data = $req->update("location", $id, $request->all());
+        return response()->json($data);
     }
 
     /**
@@ -82,8 +94,11 @@ class TrackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $req = new CoreModule(env("APP_ID"));
+        $req->setToken($request->header("token"));
+        $data = $req->delete("location", $id);
+        return response()->json($data);
     }
 }
