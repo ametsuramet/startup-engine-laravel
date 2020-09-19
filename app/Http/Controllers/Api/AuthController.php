@@ -23,6 +23,7 @@ class AuthController extends Controller
         }
 
         $core = new CoreAuth(env("APP_ID"));
+        $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         extract($request->all());
         $data = $core->login($username, $password, $fcm_token, $device);
         return response()->json($data);
@@ -50,6 +51,7 @@ class AuthController extends Controller
         }
 
         $core = new CoreAuth(env("APP_ID"));
+        $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         extract($request->all());
         $data = $core->registration($request->all());
         return response()->json($data);
@@ -69,6 +71,7 @@ class AuthController extends Controller
         }
 
         $core = new CoreAuth(env("APP_ID"));
+        $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         extract($request->all());
         $data = $core->validation($request->all());
         return response()->json($data);

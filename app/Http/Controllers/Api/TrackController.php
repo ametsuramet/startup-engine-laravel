@@ -16,6 +16,7 @@ class TrackController extends Controller
     public function index(Request $request)
     {
         $req = new CoreModule(env("APP_ID"));
+        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $request->all());
         return response()->json($data);
@@ -40,6 +41,7 @@ class TrackController extends Controller
     public function store(Request $request)
     {
         $req = new CoreModule(env("APP_ID"));
+        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         
         $data = $req->create("location", $request->all());
@@ -55,6 +57,7 @@ class TrackController extends Controller
     public function show(Request $request, $id)
     {
         $req = new CoreModule(env("APP_ID"));
+        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         
         $data = $req->show("location", $id);
@@ -82,6 +85,7 @@ class TrackController extends Controller
     public function update(Request $request, $id)
     {
         $req = new CoreModule(env("APP_ID"));
+        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         
         $data = $req->update("location", $id, $request->all());
@@ -97,6 +101,7 @@ class TrackController extends Controller
     public function destroy(Request $request, $id)
     {
         $req = new CoreModule(env("APP_ID"));
+        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         $data = $req->delete("location", $id);
         return response()->json($data);
@@ -106,6 +111,7 @@ class TrackController extends Controller
     public function today(Request $request)
     {
         $req = new CoreModule(env("APP_ID"));
+        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         $input = $request->all();
         $filter = [
