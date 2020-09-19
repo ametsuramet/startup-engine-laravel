@@ -76,4 +76,23 @@ class AuthController extends Controller
         $data = $core->validation($request->all());
         return response()->json($data);
     }
+
+    public function profile(Request $request)
+    {
+        $core = new CoreAuth(env("STARTUP_ENGINE_APP_ID"));
+        $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
+        $core->setToken($request->header("token"));
+        $data = $core->profile();
+        return response()->json($data);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $core = new CoreAuth(env("STARTUP_ENGINE_APP_ID"));
+        $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
+        $core->setToken($request->header("token"));
+        $input = $request->all();
+        $data = $core->updateProfile($input);
+        return response()->json($data);
+    }
 }

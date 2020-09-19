@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('registration', [AuthController::class, 'registration']);
 Route::post('validation', [AuthController::class, 'validation']);
+Route::get('profile', [AuthController::class, 'profile'])->middleware(GetToken::class);;
 Route::get('track/today', [TrackController::class, 'today'])->middleware(GetToken::class);
 Route::resource('track', TrackController::class)->middleware(GetToken::class);
 Route::get('master/province', [LocationController::class, 'province']);
