@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ametsuramet/startup-engine-php-sdk.git",
-                "reference": "43c370ec8c177d3b1107f77952c0e31d17e76b60"
+                "reference": "1b093b7d1e4b505f7ab6fe04b7d0c9af10799860"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ametsuramet/startup-engine-php-sdk/zipball/43c370ec8c177d3b1107f77952c0e31d17e76b60",
-                "reference": "43c370ec8c177d3b1107f77952c0e31d17e76b60",
+                "url": "https://api.github.com/repos/ametsuramet/startup-engine-php-sdk/zipball/1b093b7d1e4b505f7ab6fe04b7d0c9af10799860",
+                "reference": "1b093b7d1e4b505f7ab6fe04b7d0c9af10799860",
                 "shasum": ""
             },
             "require": {
