@@ -101,4 +101,28 @@ class TrackController extends Controller
         $data = $req->delete("location", $id);
         return response()->json($data);
     }
+
+
+    public function today(Request $request)
+    {
+        $req = new CoreModule(env("APP_ID"));
+        $req->setToken($request->header("token"));
+        $input = $request->all();
+        $filter = [
+            [
+                "type" => "and",
+                "column" => "created_at",
+                "notation" => ">=",
+                "value" => date("Y-m-d 00:00:00"),
+            ],
+            [
+                "type" => "and",
+                "column" => "created_at",
+                "notation" => "<=",
+                "value" => date("Y-m-d 23:59:59"),
+            ]
+        ];
+        $data = $req->getList("location", $input, $filter);
+        return response()->json($data);
+    }
 }
