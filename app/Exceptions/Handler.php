@@ -37,7 +37,7 @@ class Handler extends ExceptionHandler
             if ($request->is('api/v1/*')) {
                 if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
                     return response()->json(['message' => 'Not Found!'], 404);
-                elseif ($e instanceof \GuzzleHttp\Exception\ClientException)
+                elseif ($e instanceof \GuzzleHttp\Exception\ClientException || $e instanceof \GuzzleHttp\Exception\ServerException)
                     return response()->json(json_decode($e->getResponse()->getBody()->getContents()), $e->getResponse()->getStatusCode());
                 else
                     return response()->json(['message' => $e->getMessage()], $e->getStatusCode());
