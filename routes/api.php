@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Master\LocationController;
 use App\Http\Controllers\Api\TrackController;
 use App\Http\Middleware\GetToken;
 use Illuminate\Http\Request;
@@ -26,3 +27,7 @@ Route::post('registration', [AuthController::class, 'registration']);
 Route::post('validation', [AuthController::class, 'validation']);
 Route::get('track/today', [TrackController::class, 'today'])->middleware(GetToken::class);
 Route::resource('track', TrackController::class)->middleware(GetToken::class);
+Route::get('master/province', [LocationController::class, 'province'])->middleware(GetToken::class);
+Route::get('master/regency', [LocationController::class, 'regency'])->middleware(GetToken::class);
+Route::get('master/district', [LocationController::class, 'district'])->middleware(GetToken::class);
+Route::get('master/village', [LocationController::class, 'village'])->middleware(GetToken::class);
