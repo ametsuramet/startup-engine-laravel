@@ -95,4 +95,19 @@ class AuthController extends Controller
         $data = $core->updateProfile($input);
         return response()->json($data);
     }
+
+    public function upload(Request $request)
+    {
+        $core = new CoreAuth(env("STARTUP_ENGINE_APP_ID"));
+        $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
+        $core->setToken($request->header("token"));
+        $multipart = [
+            [
+                'name'     => 'file',
+                'contents' => fopen($request->file("file")->path(), 'r')
+            ]
+        ];
+        $data = $core->upload($multipart);
+        return response()->json($data);
+    }
 }
