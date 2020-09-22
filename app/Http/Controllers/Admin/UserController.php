@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use Ametsuramet\StartupEngine\CoreModule;
 use App\Classes\Model\ModelCollection;
-use App\Classes\Model\TaskModel;
 use App\Classes\Model\UserModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Validator;
 
-class TaskController extends Controller
+class UserController extends Controller
 {
     private $limit;
     function __construct()
@@ -29,7 +27,7 @@ class TaskController extends Controller
             $limit = 20;
             $data = coreModule()->getList("task", ["limit" => $limit]);
             $dataCol = new ModelCollection($data->data);
-            $collection = $dataCol->transform(new TaskModel);
+            $collection = $dataCol->transform(new UserModel);
             // dd($collection);
             $page = $request->get('page', 1);
             $perPage = $limit;
@@ -59,15 +57,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $data = coreModule()->getList("user", ["limit" => 100]);
-        $dataCol = new ModelCollection($data->data);
-        $collection = $dataCol->transform(new UserModel);
-        $users = [];
-        $collection->each(function($d, $i) use (&$users) {
-            $users[$d->id] = $d->full_name;
-        });
-        
-        return view('pages.task.create', compact('users'));
+        //
     }
 
     /**
@@ -78,31 +68,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            "name" => "required",
-            "description" => "required",
-            "created_by" => "required",
-            "assigned_to" => "required",
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors());
-        }
-
-        $input = $request->except("_token");
-        $input['start_date'] = $input['start_date'].":00+07:00";
-
-        try {
-            $data = coreModule()->create("task", $input);
-            return redirect(route('task.show', ['task' => $data->data->id]));
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $resp = json_decode($e->getResponse()->getBody()->getContents());
-            dd($resp);
-            return back()->withInput()->withErrors(['msg' => $resp->message]);
-        } catch (\Exception $e) {
-            dd($e);
-            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
-        }
+        //
     }
 
     /**
@@ -116,7 +82,7 @@ class TaskController extends Controller
         try {
             $data = coreModule()->show("task", $id);
 
-            return view('pages.task.show', ['data' => TaskModel::fromJson($data->data)]);
+            return view('pages.task.show', ['data' => UserModel::fromJson($data->data)]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
             dd($resp);
