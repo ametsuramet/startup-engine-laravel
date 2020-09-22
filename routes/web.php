@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Ametsuramet\StartupEngine\CoreModule;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\TaskController;
 use App\Http\Middleware\AdminMiddleware;
 
 /*
@@ -28,6 +29,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout.post');
 Route::group(['prefix' => 'admin', 'middleware' => AdminMiddleware::class], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('task', TaskController::class);
 });
 // Route::get('/test', function () {
 //     $core = new CoreAuth("32395c3a-c78f-432e-b553-0e0489699dbb");
