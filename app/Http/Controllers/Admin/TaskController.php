@@ -9,6 +9,7 @@ use App\Classes\Model\UserModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
@@ -40,7 +41,16 @@ class TaskController extends Controller
                 $page,
                 ['path' => url('admin/task')]
             );
-            return view('pages.task.index', ['data' => $paginate]);
+            $data = coreModule()->getList("user", ["limit" => 100]);
+            $dataCol = new ModelCollection($data->data);
+            $collection = $dataCol->transform(new UserModel);
+            $users = [];
+            $collection->each(function($d, $i) use (&$users) {
+                $users[$d->id] = $d->full_name;
+            });
+            
+            
+            return view('pages.task.index', ['data' => $paginate, "users" => $users]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
             dd($resp);
@@ -115,7 +125,7 @@ class TaskController extends Controller
     {
         try {
             $data = coreModule()->show("task", $id);
-
+            // dd($data);
             return view('pages.task.show', ['data' => TaskModel::fromJson($data->data)]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
@@ -159,5 +169,50 @@ class TaskController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function addImage(Request $request, $task_id)
+    {
+       
+        try {
+            $validator = Validator::make($request->all(), [
+                "path" => "required",
+    
+            ]);
+            if ($validator->fails()) {
+                if ($request->ajax()) return response()->json(['message' => $validator->errors()], 400);
+                return back()->withInput()->withErrors($validator->errors());
+            }
+           
+            $detail = coreModule()->show("task", $task_id)->data;
+            $payload = [
+
+                "name" => $detail->name,
+                "description" => $detail->description,
+                "created_by" => $detail->created->id,
+                "assigned_to" => $detail->assigned->id,
+                "images" => [[
+                    "name" => "",
+                    "description" => "",
+                    "path" => $request->path,
+                ]]
+            ];
+
+            Log::info(json_encode($payload));
+    
+            $data = coreModule()->update('task', $task_id, $payload);
+            if ($request->ajax()) return response()->json(['message' => "success", 'data' =>$data]);
+    
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
+       
+
+       
     }
 }

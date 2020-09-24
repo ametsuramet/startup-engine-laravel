@@ -4,10 +4,11 @@ namespace App\Classes\Model;
 
 use Carbon\Carbon;
 
+
 class BaseModel
 {
     private $properties;
-
+    protected $data;
 
     public static function fromJson($dataJson)
     {
@@ -29,5 +30,15 @@ class BaseModel
     {
 
         $this->properties[$propertyName] = $propertyValue;
+    }
+
+    public function toJson() 
+    {
+        $array = [];
+        foreach($this->properties as $key => $value)
+        {   
+            $array[$key] = $value;
+        }
+        return json_encode($array);
     }
 }

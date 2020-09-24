@@ -11,4 +11,15 @@ class DashboardController extends Controller
     {
         return view('admin.dashboard');
     }
+    public function upload(Request $request)
+    {
+        $multipart = [
+            [
+                'name'     => 'file',
+                'contents' => fopen($request->file('file')->path(), 'r')
+            ]
+        ];
+        $response = coreAuth()->upload($multipart);
+        return response()->json($response);
+    }
 }
