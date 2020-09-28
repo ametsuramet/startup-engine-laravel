@@ -45,11 +45,11 @@ class TaskController extends Controller
             $dataCol = new ModelCollection($data->data);
             $collection = $dataCol->transform(new UserModel);
             $users = [];
-            $collection->each(function($d, $i) use (&$users) {
+            $collection->each(function ($d, $i) use (&$users) {
                 $users[$d->id] = $d->full_name;
             });
-            
-            
+
+
             return view('pages.task.index', ['data' => $paginate, "users" => $users]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
@@ -73,10 +73,10 @@ class TaskController extends Controller
         $dataCol = new ModelCollection($data->data);
         $collection = $dataCol->transform(new UserModel);
         $users = [];
-        $collection->each(function($d, $i) use (&$users) {
+        $collection->each(function ($d, $i) use (&$users) {
             $users[$d->id] = $d->full_name;
         });
-        
+
         return view('pages.task.create', compact('users'));
     }
 
@@ -100,7 +100,7 @@ class TaskController extends Controller
         }
 
         $input = $request->except("_token");
-        $input['start_date'] = $input['start_date'].":00+07:00";
+        $input['start_date'] = $input['start_date'] . ":00+07:00";
 
         try {
             $data = coreModule()->create("task", $input);
@@ -157,7 +157,31 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                "name" => "required",
+                "description" => "required",
+                "created_by" => "required",
+                "assigned_to" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+            $input = $request->except("_token");
+            $input = $request->except("_token");
+            $input['start_date'] = $input['start_date'] . ":00+07:00";
+            $data = coreModule()->update("task", $id, $input);
+            // dd($data);
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -168,21 +192,32 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $data = coreModule()->delete("task", $id);
+            // dd($data);
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
     public function addImage(Request $request, $task_id)
     {
-       
+
         try {
             $validator = Validator::make($request->all(), [
                 "path" => "required",
-    
+
             ]);
             if ($validator->fails()) {
                 if ($request->ajax()) return response()->json(['message' => $validator->errors()], 400);
                 return back()->withInput()->withErrors($validator->errors());
             }
-           
+
             $detail = coreModule()->show("task", $task_id)->data;
             $payload = [
 
@@ -198,10 +233,10 @@ class TaskController extends Controller
             ];
 
             Log::info(json_encode($payload));
-    
+
             $data = coreModule()->update('task', $task_id, $payload);
-            if ($request->ajax()) return response()->json(['message' => "success", 'data' =>$data]);
-    
+            if ($request->ajax()) return response()->json(['message' => "success", 'data' => $data]);
+
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
@@ -211,8 +246,5 @@ class TaskController extends Controller
             dd($e);
             return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
         }
-       
-
-       
     }
 }

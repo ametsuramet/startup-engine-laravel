@@ -91,9 +91,31 @@ class TaskItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $task_id, $id)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                "name" => "required",
+                "description" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+            $input = $request->except("_token");
+            $input['task_id'] = $task_id;
+            $input['type'] = "items";
+            $data = coreModule()->update("task_item", $id, $input);
+            // dd($data);
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -102,8 +124,19 @@ class TaskItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($task_id, $id)
     {
-        //
+        try {
+            $data = coreModule()->delete("task_item", $id);
+            // dd($data);
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 }

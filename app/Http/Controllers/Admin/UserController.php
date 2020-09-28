@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         try {
             $limit = 20;
-            $data = coreModule()->getList("task", ["limit" => $limit]);
+            $data = coreModule()->getList("user", ["limit" => $limit]);
             $dataCol = new ModelCollection($data->data);
             $collection = $dataCol->transform(new UserModel);
             // dd($collection);
@@ -36,9 +36,9 @@ class UserController extends Controller
                 $data->meta->total_records,
                 $perPage,
                 $page,
-                ['path' => url('admin/task')]
+                ['path' => url('admin/user')]
             );
-            return view('pages.task.index', ['data' => $paginate]);
+            return view('pages.user.index', ['data' => $paginate]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
             dd($resp);
@@ -80,9 +80,9 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $data = coreModule()->show("task", $id);
+            $data = coreModule()->show("user", $id);
 
-            return view('pages.task.show', ['data' => UserModel::fromJson($data->data)]);
+            return view('pages.user.show', ['data' => UserModel::fromJson($data->data)]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
             dd($resp);

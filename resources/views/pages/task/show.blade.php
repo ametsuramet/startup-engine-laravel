@@ -30,6 +30,7 @@
               <th>#</th>
               <th>Judul</th>
               <th>Keterangan</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -38,6 +39,19 @@
               <td>{!! $i + 1 !!}</td>
               <td>{!! $item->name !!}</td>
               <td>{!! $item->description !!}</td>
+              <td style="text-align:right">
+
+                {!! Form::open(['route' => ['task-item.destroy', $data->id, $item->id]]) !!}
+                {!! Form::hidden('_method', "delete") !!}
+                <a href="javascript:void(0)"
+                  onclick='showEditModal("{!! route("task-item.update", ["task_id" => $data->id, "task_item" => $item->id]) !!}", "{!! $item->name !!}", "{!! $item->description !!}" );'
+                  class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                <button class="btn btn-sm btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this item?');"><i
+                    class="fa fa-trash"></i></button>
+                {!! Form::close() !!}
+
+              </td>
 
             </tr>
 
@@ -126,6 +140,41 @@
   </div>
 </div>
 
+
+<div class="modal fade " id="task-item-edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    {!! Form::open(['url' => "", 'method' => 'post', "id" => "task-item-edit"]) !!}
+    {!! Form::hidden("_method", "put", ) !!}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Detail</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="col-md-12">
+          <div class="form-group row">
+            {!! Form::label('name', 'Judul', ['class' => 'col-md-3']) !!}
+            {!! Form::text('name', null, ['class' => 'form-control col-md-9']) !!}
+          </div>
+          <div class="form-group row">
+            {!! Form::label('description', 'Keterangan', ['class' => 'col-md-3']) !!}
+            <textarea class="form-control col-md-9" name="description" id="" cols="30" rows="10"></textarea>
+          </div>
+          {!! Form::hidden('type', 'task') !!}
+          {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
+
+
+        </div>
+      </div>
+
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
 @endsection
 @push('css')
 <style>
@@ -160,5 +209,13 @@
         $('#imagepreview').attr('src', url); // here asign the image to the modal when the user click the enlarge link
         $('#imagemodal').modal('show');
       }
+
+      function showEditModal(url, name, description) {
+            var form = $('#task-item-edit')
+            form.attr("action", url)
+            form.find('[name=name]').val(name)
+            form.find('[name=description]').val(description)
+            $('#task-item-edit-modal').modal('show')
+        }
 </script>
 @endpush

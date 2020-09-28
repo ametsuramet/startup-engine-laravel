@@ -50,12 +50,16 @@
                         <td>{!! $item->assigned->full_name !!}</td>
 
                         <td style="text-align:right">
+
+                            {!! Form::open(['route' => ['task.destroy', $item->id]]) !!}
+                            {!! Form::hidden('_method', "delete") !!}
                             <a href="{!! route('task.show', ['task' => $item->id]) !!}"
                                 class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                            <button
+                            <a href="javascript:void(0)"
                                 onclick='showEditModal("{!! route("task.update", ["task" => $item->id]) !!}", "{!! $item->name !!}", "{!! $item->description !!}", "{!! $item->start_date !!}", "{!! $item->created->id !!}", "{!! $item->assigned->id !!}" );'
-                                class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa fa-trash"></i></button>
+                            {!! Form::close() !!}
                         </td>
                     </tr>
                     @endforeach
@@ -73,7 +77,7 @@
         {!! Form::hidden("_method", "put", ) !!}
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Detail</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Task</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
