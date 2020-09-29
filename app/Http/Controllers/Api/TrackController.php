@@ -137,13 +137,13 @@ class TrackController extends Controller
         $filter = [
             [
                 "type" => "and",
-                "column" => "created_at",
+                "column" => "date",
                 "notation" => ">=",
                 "value" => date("Y-m-d 00:00:00"),
             ],
             [
                 "type" => "and",
-                "column" => "created_at",
+                "column" => "date",
                 "notation" => "<=",
                 "value" => date("Y-m-d 23:59:59"),
             ],
@@ -166,13 +166,13 @@ class TrackController extends Controller
         $filter = [
             [
                 "type" => "and",
-                "column" => "created_at",
+                "column" => "date",
                 "notation" => ">=",
                 "value" => date("Y-m-d 00:00:00"),
             ],
             [
                 "type" => "and",
-                "column" => "created_at",
+                "column" => "date",
                 "notation" => "<=",
                 "value" => date("Y-m-d 23:59:59"),
             ],
