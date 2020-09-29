@@ -171,6 +171,7 @@ class UserController extends Controller
             $inputUser = array_merge($dataUser, $input);
             $core = coreModule();
             $data = $core->update("user", $id, $input);
+            session()->flash("success", "Data User berhasil disimpan");
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
