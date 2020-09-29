@@ -125,6 +125,7 @@ class TrackController extends Controller
                 "value" => date("Y-m-d 23:59:59"),
             ],
         ];
+        $req->setToken($request->header("token"));
         $data = $req->getList("task", $input, $filter);
         return response()->json($data);
     }
@@ -153,6 +154,7 @@ class TrackController extends Controller
                 "value" => "checkin",
             ],
         ];
+        $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
         return response()->json($data);
     }
@@ -181,6 +183,7 @@ class TrackController extends Controller
                 "value" => "checkout",
             ],
         ];
+        $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
         return response()->json($data);
     }
