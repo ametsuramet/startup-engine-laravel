@@ -107,12 +107,9 @@ class TrackController extends Controller
         return response()->json($data);
     }
 
-
-    public function today(Request $request)
+    public function taskToday(Request $request)
     {
-        $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
-        $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
-        $req->setToken($request->header("token"));
+        $req = coreModule(false);
         $input = $request->all();
         $filter = [
             [
@@ -126,7 +123,63 @@ class TrackController extends Controller
                 "column" => "created_at",
                 "notation" => "<=",
                 "value" => date("Y-m-d 23:59:59"),
-            ]
+            ],
+        ];
+        $data = $req->getList("task", $input, $filter);
+        return response()->json($data);
+    }
+
+    public function checkIn(Request $request)
+    {
+        $req = coreModule(false);
+        $input = $request->all();
+        $filter = [
+            [
+                "type" => "and",
+                "column" => "created_at",
+                "notation" => ">=",
+                "value" => date("Y-m-d 00:00:00"),
+            ],
+            [
+                "type" => "and",
+                "column" => "created_at",
+                "notation" => "<=",
+                "value" => date("Y-m-d 23:59:59"),
+            ],
+            [
+                "type" => "and",
+                "column" => "type",
+                "notation" => "=",
+                "value" => "checkin",
+            ],
+        ];
+        $data = $req->getList("location", $input, $filter);
+        return response()->json($data);
+    }
+
+    public function checkOut(Request $request)
+    {
+        $req = coreModule(false);
+        $input = $request->all();
+        $filter = [
+            [
+                "type" => "and",
+                "column" => "created_at",
+                "notation" => ">=",
+                "value" => date("Y-m-d 00:00:00"),
+            ],
+            [
+                "type" => "and",
+                "column" => "created_at",
+                "notation" => "<=",
+                "value" => date("Y-m-d 23:59:59"),
+            ],
+            [
+                "type" => "and",
+                "column" => "type",
+                "notation" => "=",
+                "value" => "checkout",
+            ],
         ];
         $data = $req->getList("location", $input, $filter);
         return response()->json($data);
