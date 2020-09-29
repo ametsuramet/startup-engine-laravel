@@ -105,6 +105,7 @@ class UserController extends Controller
         try {
 
             $data = coreModule()->show("user", $id);
+            // dd($data->data);
             $get_provinces = coreMaster()->getProvince();
             $get_regencies = coreMaster()->getRegency([[
                 "type" => "and",

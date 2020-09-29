@@ -23,6 +23,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th width="60">Foto</th>
                         <th>Nama Lengkap</th>
                         <th>Email</th>
                         <th>Telp</th>
@@ -32,6 +33,7 @@
                 <tfoot>
                     <tr>
                         <th>#</th>
+                        <th width="60">Foto</th>
                         <th>Nama Lengkap</th>
                         <th>Email</th>
                         <th>Telp</th>
@@ -42,6 +44,7 @@
                     @foreach ($data->items() as $i => $item)
                     <tr>
                         <td>{!! $i + 1 !!}</td>
+                        <td><img class="img-profile rounded-circle" style="width: 60px" src="{!! ($item->photo)  ? $item->photo :  '/images/user.png'!!}"></td>
                         <td>{!! $item->full_name !!}</td>
                         <td>{!! $item->email !!}</td>
                         <td>{!! $item->phone !!}</td>

@@ -71,8 +71,9 @@
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">UPLOAD IMAGE</h6>
             </div>
-            <div class="card-body">
+            <div class="card-body d-flex justify-content-center align-items-center flex-column">
                 @include('component.dropzone')
+                <img class="img-profile rounded-circle mt-2" style="width: 120px" src="{!! ($data->photo)  ? $data->photo :  '/images/user.png'!!}">
             </div>
         </div>
 
@@ -92,30 +93,30 @@
 
     $('#province_id').change(function() {
         var province_id = $(this).val()
-        $.ajax({
-         url: '{!! env("STARTUP_ENGINE_BASEURL") !!}/api/v1/startup/public/master/regency',
-         data: [
-            {
-                "type" : "and",
-                "column" : "province_id",
-                "notation" : "=",
-                "value" : $province_id,
-            }
-         ]
-         type: "GET",
-         beforeSend: function(xhr){xhr.setRequestHeader('APP-ID', '{!! env("STARTUP_ENGINE_APP_ID") !!}');},
-         success: function(resp) { 
+        $.get('/api/v1/master/regency?province_id='+province_id, function(resp) {
             $('#regency_id').html( resp.data.map(function(d) {
                 return `<option value=${d.id}>${d.name}</option>`;
             }))
-          }
-      });
+            $('#district_id').html(null)
+            $('#village_id').html(null)
+        })
     })
     $('#regency_id').change(function() {
         var regency_id = $(this).val()
+        $.get('/api/v1/master/district?regency_id='+regency_id, function(resp) {
+            $('#district_id').html( resp.data.map(function(d) {
+                return `<option value=${d.id}>${d.name}</option>`;
+            }))
+            $('#village_id').html(null)
+        })
     })
     $('#district_id').change(function() {
         var district_id = $(this).val()
+        $.get('/api/v1/master/village?district_id='+district_id, function(resp) {
+            $('#village_id').html( resp.data.map(function(d) {
+                return `<option value=${d.id}>${d.name}</option>`;
+            }))
+        })
     })
     $('#village_id').change(function() {
         var village_id = $(this).val()
