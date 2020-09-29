@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Ametsuramet\StartupEngine\CoreModule;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\TaskItemController;
 use App\Http\Controllers\Admin\UserController;
@@ -32,6 +33,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout.post');
 Route::group(['prefix' => 'admin', 'middleware' => AdminMiddleware::class], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('upload', [DashboardController::class, 'upload'])->name('admin.upload');
+    Route::get('profile', [GeneralController::class, 'profile'])->name('admin.profile');
+    Route::post('update-profile', [GeneralController::class, 'updateProfile'])->name('admin.updateProfile');
     Route::post('task/{task_id}/addImage', [TaskController::class, 'addImage'])->name('task.addImage');
     Route::resource('task', TaskController::class);
     Route::resource('user', UserController::class);

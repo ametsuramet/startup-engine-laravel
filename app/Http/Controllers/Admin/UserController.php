@@ -8,6 +8,7 @@ use App\Classes\Model\UserModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -101,7 +102,44 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+
+            $data = coreModule()->show("user", $id);
+            $get_provinces = coreMaster()->getProvince();
+            $get_regencies = coreMaster()->getRegency([[
+                "type" => "and",
+                "column" => "province_id",
+                "notation" => "=",
+                "value" => $data->data->province_id,
+            ]]);
+            $get_districts = coreMaster()->getDistrict([[
+                "type" => "and",
+                "column" => "regency_id",
+                "notation" => "=",
+                "value" => $data->data->regency_id,
+            ]]);
+            $get_villages = coreMaster()->getVillage([[
+                "type" => "and",
+                "column" => "district_id",
+                "notation" => "=",
+                "value" => $data->data->district_id,
+            ]]);
+            $provinces = toSelect($get_provinces->data);
+            $regencies = toSelect($get_regencies->data);
+            $districts = toSelect($get_districts->data);
+            $villages = toSelect($get_villages->data);
+            // dd($provinces);
+            $data = UserModel::fromJson($data->data);
+            // dd($data);
+            return view('pages.user.edit', compact('data', 'provinces', 'regencies', 'districts', 'villages'));
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -113,7 +151,34 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+
+        try {
+            $validator = Validator::make($request->all(), [
+                "first_name" => "required",
+                // "middle_name" => "required",
+                "last_name" => "required",
+                "phone" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+            $dataUser = coreModule()->show("user", $id);
+            $dataUser = json_decode(json_encode($dataUser->data), true);
+            $input = $request->except(["_token", "_method"]);
+            $inputUser = array_merge($dataUser, $input);
+            $core = coreModule();
+            $data = $core->update("user", $id, $input);
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**

@@ -38,7 +38,7 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
+          @include('errors')
           @yield('content')
 
         </div>

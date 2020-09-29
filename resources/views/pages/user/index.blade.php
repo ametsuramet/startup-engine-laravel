@@ -48,8 +48,8 @@
                         <td style="text-align:right">
                             {!! Form::open(['route' => ['user.destroy', $item->id]]) !!}
                             {!! Form::hidden('_method', "delete") !!}
-                            <a href="{!! route('user.show', ['user' => $item->id]) !!}"
-                                class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                            <a href="{!! route('user.edit', ['user' => $item->id]) !!}"
+                                class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                             {{-- <a href="javascript:void(0)"
                                 onclick='showEditModal("{!! route("user.update", ["user" => $item->id]) !!}", "{!! $item->name !!}", "{!! $item->description !!}", "{!! $item->start_date !!}", "{!! $item->created->id !!}", "{!! $item->assigned->id !!}" );'
                                 class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a> --}}
