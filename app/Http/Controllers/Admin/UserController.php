@@ -58,7 +58,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $get_provinces = coreMaster()->getProvince();
+        $provinces = toSelect($get_provinces->data);
+        $regencies = [];
+        $districts = [];
+        $villages = [];
+        return view('pages.user.create', compact('provinces', 'regencies', 'districts', 'villages'));
     }
 
     /**
@@ -69,7 +74,42 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "email" => "required",
+            "password" => "required",
+            "phone" => "required",
+            "first_name" => "required",
+            "last_name" => "required",
+            "gender" => "required",
+            "address" => "required",
+            "province_id" => "required",
+            "regency_id" => "required",
+            "district_id" => "required",
+            "village_id" => "required",
+        ]);
+
+        try {
+            if ($request->password != $request->confirm_password) {
+                return back()->withInput()->withErrors(['msg' => "password tidak sama"]);
+            }
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+            $input = $request->except(["_token", "_method", "confirm_password"]);
+            $input["username"] = $request->email;
+            $input["verify_at"] = date("Y-m-dTH:i:s+07:00");
+            $core = coreModule();
+            $data = $core->create("user", $input);
+            session()->flash("success", "Data User berhasil disimpan");
+            return back();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
