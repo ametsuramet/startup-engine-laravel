@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ametsuramet\StartupEngine\CoreModule;
+use League\HTMLToMarkdown\HtmlConverter;
 
 class TrackController extends Controller
 {
@@ -29,7 +30,6 @@ class TrackController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -43,7 +43,7 @@ class TrackController extends Controller
         $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
-        
+
         $data = $req->create("location", $request->all());
         return response()->json($data);
     }
@@ -59,7 +59,7 @@ class TrackController extends Controller
         $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
-        
+
         $data = $req->show("location", $id);
         return response()->json($data);
     }
@@ -87,7 +87,7 @@ class TrackController extends Controller
         $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
-        
+
         $data = $req->update("location", $id, $request->all());
         return response()->json($data);
     }
@@ -156,6 +156,11 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
+        $converter = new HtmlConverter(['strip_tags' => true]);
+        $data->data = collect($data->data)->map(function ($d) use ($converter) {
+            $d->description = $converter->convert($d->description);
+            return $d;
+        });
         return response()->json($data);
     }
 
