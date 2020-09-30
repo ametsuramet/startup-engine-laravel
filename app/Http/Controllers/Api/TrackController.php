@@ -129,6 +129,14 @@ class TrackController extends Controller
         $data = $req->getList("task", $input, $filter);
         return response()->json($data);
     }
+    public function taskDetail(Request $request, $id)
+    {
+        $req = coreModule(false);
+ 
+        $req->setToken($request->header("token"));
+        $data = $req->show("task", $id);
+        return response()->json($data);
+    }
 
     public function checkIn(Request $request)
     {

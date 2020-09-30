@@ -28,6 +28,7 @@ Route::post('validation', [AuthController::class, 'validation']);
 Route::get('profile', [AuthController::class, 'profile'])->middleware(GetToken::class);
 Route::post('profile', [AuthController::class, 'updateProfile'])->middleware(GetToken::class);
 Route::post('upload', [AuthController::class, 'upload'])->middleware(GetToken::class);
+Route::get('track/task/{id}', [TrackController::class, 'taskDetail'])->middleware(GetToken::class)->name('track.taskDetail');
 Route::get('track/taskToday', [TrackController::class, 'taskToday'])->middleware(GetToken::class)->name('track.taskToday');
 Route::get('track/checkIn', [TrackController::class, 'checkIn'])->middleware(GetToken::class)->name('track.checkIn');
 Route::get('track/checkOut', [TrackController::class, 'checkOut'])->middleware(GetToken::class)->name('track.checkOut');
