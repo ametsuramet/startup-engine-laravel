@@ -103,7 +103,7 @@
                     </div>
                     <div class="form-group row">
                         {!! Form::label('description', 'Keterangan', ['class' => 'col-md-3']) !!}
-                        <textarea class="form-control col-md-9" name="description" id="" cols="30" rows="10"></textarea>
+                        <textarea class="form-control col-md-9 summernote" name="description" id="" cols="30" rows="10"></textarea>
                     </div>
                     {!! Form::hidden('type', 'task') !!}
                     {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
@@ -120,6 +120,7 @@
 
 @push('js')
 <script>
+     
     Number.prototype.pad = function(size) {
         var s = String(this);
         while (s.length < (size || 2)) {s = "0" + s;}
@@ -139,6 +140,7 @@
             form.find('[name=assigned_to]').val(assignedTo)
             form.find('[name=start_date]').val(start)
             $('#task-edit-modal').modal('show')
+            $('.summernote').summernote('code', description);
         }
       
 </script>

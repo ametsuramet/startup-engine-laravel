@@ -109,7 +109,7 @@
         </div>
         <div class="form-group row">
           {!! Form::label('description', 'Keterangan', ['class' => 'col-md-3']) !!}
-          <textarea class="form-control col-md-9" name="description" id="" cols="30" rows="10"></textarea>
+          <textarea class="form-control col-md-9 summernote" name="description" id="" cols="30" rows="10"></textarea>
         </div>
         {!! Form::hidden('type', 'task') !!}
         {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
@@ -162,7 +162,7 @@
           </div>
           <div class="form-group row">
             {!! Form::label('description', 'Keterangan', ['class' => 'col-md-3']) !!}
-            <textarea class="form-control col-md-9" name="description" id="" cols="30" rows="10"></textarea>
+            <textarea class="form-control col-md-9 summernote" name="description" id="" cols="30" rows="10"></textarea>
           </div>
           {!! Form::hidden('type', 'task') !!}
           {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
@@ -191,6 +191,9 @@
 @endpush
 @push('js0')
 <script>
+  $(window).on('shown.bs.modal', function() { 
+    
+});
   var taskId = "{!! $data->id !!}"
       function responseUpload(file, resp) {
         // console.log(file)
@@ -216,6 +219,7 @@
             form.find('[name=name]').val(name)
             form.find('[name=description]').val(description)
             $('#task-item-edit-modal').modal('show')
+            $('.summernote').summernote('code', description);
         }
 </script>
 @endpush
