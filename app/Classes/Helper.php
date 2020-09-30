@@ -4,6 +4,8 @@ use Ametsuramet\StartupEngine\CoreAuth;
 use Ametsuramet\StartupEngine\CoreModule;
 use Ametsuramet\StartupEngine\CoreMaster;
 use Illuminate\Support\Carbon;
+use League\HTMLToMarkdown\HtmlConverter;
+
 
 if (!function_exists('parseDate')) {
     function parseDate(String $dateString, $format = null)
@@ -59,5 +61,17 @@ if (!function_exists('toSelect')) {
             $response[$d->{$id}] = $d->{$value};
         }
         return $response;
+    }
+}
+
+if (!function_exists('collectionMD')) {
+    function collectionMD(Array $data) : Array
+    {
+        $converter = new HtmlConverter(['strip_tags' => true]);
+        $response = collect($data)->map(function ($d) use ($converter) {
+            $d->description = $converter->convert($d->description);
+            return $d;
+        });
+        return $response->toArray();
     }
 }

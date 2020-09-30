@@ -20,6 +20,7 @@ class TrackController extends Controller
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $request->all());
+        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 
@@ -127,6 +128,7 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("task", $input, $filter);
+        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 
@@ -156,11 +158,7 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
-        $converter = new HtmlConverter(['strip_tags' => true]);
-        $data->data = collect($data->data)->map(function ($d) use ($converter) {
-            $d->description = $converter->convert($d->description);
-            return $d;
-        });
+        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 
@@ -190,6 +188,7 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
+        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 }
