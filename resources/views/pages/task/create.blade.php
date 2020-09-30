@@ -24,8 +24,8 @@
             {!! Form::text('name', null, ['class' => 'form-control col-md-9']) !!}
         </div>
         <div class="form-group row">
-            {!! Form::label('description', 'Keterangan', ['class' => 'col-md-3']) !!}
-            <textarea  class="form-control col-md-9" name="description" id="" cols="30" rows="10"></textarea>
+            {!! Form::label('description', 'Keterangan', ['class' => 'col-md-3 ']) !!}
+            <textarea  class="form-control col-md-9 summernote" name="description" id="" cols="30" rows="20"></textarea>
         </div>
         {!! Form::hidden('type', 'task') !!}
         {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
