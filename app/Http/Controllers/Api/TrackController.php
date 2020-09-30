@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ametsuramet\StartupEngine\CoreModule;
-use League\HTMLToMarkdown\HtmlConverter;
 
 class TrackController extends Controller
 {
@@ -20,7 +19,6 @@ class TrackController extends Controller
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $request->all());
-        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 
@@ -31,6 +29,7 @@ class TrackController extends Controller
      */
     public function create()
     {
+        
     }
 
     /**
@@ -44,7 +43,7 @@ class TrackController extends Controller
         $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
-
+        
         $data = $req->create("location", $request->all());
         return response()->json($data);
     }
@@ -60,7 +59,7 @@ class TrackController extends Controller
         $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
-
+        
         $data = $req->show("location", $id);
         return response()->json($data);
     }
@@ -88,7 +87,7 @@ class TrackController extends Controller
         $req = new CoreModule(env("STARTUP_ENGINE_APP_ID"));
         $req->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
         $req->setToken($request->header("token"));
-
+        
         $data = $req->update("location", $id, $request->all());
         return response()->json($data);
     }
@@ -128,7 +127,6 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("task", $input, $filter);
-        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 
@@ -158,7 +156,6 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
-        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 
@@ -188,7 +185,6 @@ class TrackController extends Controller
         ];
         $req->setToken($request->header("token"));
         $data = $req->getList("location", $input, $filter);
-        $data->data = collectionMD($data->data);
         return response()->json($data);
     }
 }
