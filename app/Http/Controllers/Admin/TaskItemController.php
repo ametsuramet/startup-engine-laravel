@@ -50,7 +50,10 @@ class TaskItemController extends Controller
         $input['task_id'] = $task_id;
         $input['type'] = "items";
         try {
-            $data = coreModule()->create("task_item", $input);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->create("task_item", $input);
             return redirect(route('task.show', ['task' => $task_id]));
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
@@ -105,7 +108,10 @@ class TaskItemController extends Controller
             $input = $request->except("_token");
             $input['task_id'] = $task_id;
             $input['type'] = "items";
-            $data = coreModule()->update("task_item", $id, $input);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->update("task_item", $id, $input);
             // dd($data);
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -127,7 +133,10 @@ class TaskItemController extends Controller
     public function destroy($task_id, $id)
     {
         try {
-            $data = coreModule()->delete("task_item", $id);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->delete("task_item", $id);
             // dd($data);
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {

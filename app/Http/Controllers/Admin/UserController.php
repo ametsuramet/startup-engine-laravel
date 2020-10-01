@@ -26,7 +26,10 @@ class UserController extends Controller
     {
         try {
             $limit = 20;
-            $data = coreModule()->getList("user", ["limit" => $limit]);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->getList("user", ["limit" => $limit]);
             $dataCol = new ModelCollection($data->data);
             $collection = $dataCol->transform(new UserModel);
             // dd($collection);
@@ -98,8 +101,10 @@ class UserController extends Controller
             $input = $request->except(["_token", "_method", "confirm_password"]);
             $input["username"] = $request->email;
             $input["verify_at"] = date("Y-m-dTH:i:s+07:00");
-            $core = coreModule();
-            $data = $core->create("user", $input);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->create("user", $input);
             session()->flash("success", "Data User berhasil disimpan");
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -121,7 +126,10 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $data = coreModule()->show("user", $id);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->show("user", $id);
 
             return view('pages.user.show', ['data' => UserModel::fromJson($data->data)]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -143,8 +151,10 @@ class UserController extends Controller
     public function edit($id)
     {
         try {
-
-            $data = coreModule()->show("user", $id);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->show("user", $id);
             // dd($data->data);
             $get_provinces = coreMaster()->getProvince();
             $get_regencies = coreMaster()->getRegency([[
@@ -205,12 +215,15 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
-            $dataUser = coreModule()->show("user", $id);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $dataUser = $req->show("user", $id);
             $dataUser = json_decode(json_encode($dataUser->data), true);
             $input = $request->except(["_token", "_method"]);
             $inputUser = array_merge($dataUser, $input);
-            $core = coreModule();
-            $data = $core->update("user", $id, $input);
+
+            $data = $req->update("user", $id, $inputUser);
             session()->flash("success", "Data User berhasil disimpan");
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {

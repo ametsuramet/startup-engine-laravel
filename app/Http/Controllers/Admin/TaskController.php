@@ -44,9 +44,9 @@ class TaskController extends Controller
                 $page,
                 ['path' => url('admin/task')]
             );
-            
-            
-            
+
+
+
             $data = $req->getList("user", ["limit" => 100]);
             $dataCol = new ModelCollection($data->data);
             $collection = $dataCol->transform(new UserModel);
@@ -75,7 +75,10 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $data = coreModule()->getList("user", ["limit" => 100]);
+        $req =  coreModule();
+        $endpoint = "/api/v1/startup/admin/feature";
+        $req->setEndpoint($endpoint);
+        $data = $req->getList("user", ["limit" => 100]);
         $dataCol = new ModelCollection($data->data);
         $collection = $dataCol->transform(new UserModel);
         $users = [];
@@ -109,7 +112,10 @@ class TaskController extends Controller
         $input['start_date'] = $input['start_date'] . ":00+07:00";
 
         try {
-            $data = coreModule()->create("task", $input);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->create("task", $input);
             return redirect(route('task.show', ['task' => $data->data->id]));
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $resp = json_decode($e->getResponse()->getBody()->getContents());
@@ -130,7 +136,10 @@ class TaskController extends Controller
     public function show($id)
     {
         try {
-            $data = coreModule()->show("task", $id);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->show("task", $id);
             // dd($data);
             return view('pages.task.show', ['data' => TaskModel::fromJson($data->data)]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -175,9 +184,12 @@ class TaskController extends Controller
                 return back()->withInput()->withErrors($validator->errors());
             }
             $input = $request->except("_token");
-            $input = $request->except("_token");
+
             $input['start_date'] = $input['start_date'] . ":00+07:00";
-            $data = coreModule()->update("task", $id, $input);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->update("task", $id, $input);
             // dd($data);
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -199,7 +211,10 @@ class TaskController extends Controller
     public function destroy($id)
     {
         try {
-            $data = coreModule()->delete("task", $id);
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
+            $data = $req->delete("task", $id);
             // dd($data);
             return back();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -223,8 +238,11 @@ class TaskController extends Controller
                 if ($request->ajax()) return response()->json(['message' => $validator->errors()], 400);
                 return back()->withInput()->withErrors($validator->errors());
             }
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
 
-            $detail = coreModule()->show("task", $task_id)->data;
+            $detail = $req->show("task", $task_id)->data;
             $payload = [
 
                 "name" => $detail->name,
