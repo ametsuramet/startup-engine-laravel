@@ -35,6 +35,7 @@ if (!function_exists('coreModule')) {
             $isAdmin  ? env('STARTUP_ENGINE_APP_KEY') : null
         );
         $core->setBaseUrl(env("STARTUP_ENGINE_BASEURL", "http://localhost:9000"));
+        // dd(session('token'));
         $core->setToken(session('token'));
         return $core;
     }

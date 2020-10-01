@@ -32,6 +32,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout.post');
 Route::group(['prefix' => 'admin', 'middleware' => AdminMiddleware::class], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('pairing', [GeneralController::class, 'pairing'])->name('admin.pairing');
     Route::post('upload', [DashboardController::class, 'upload'])->name('admin.upload');
     Route::get('profile', [GeneralController::class, 'profile'])->name('admin.profile');
     Route::post('update-profile', [GeneralController::class, 'updateProfile'])->name('admin.updateProfile');

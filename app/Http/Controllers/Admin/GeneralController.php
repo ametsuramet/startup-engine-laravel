@@ -42,4 +42,23 @@ class GeneralController extends Controller
     {
         return view('pages.general.profile');
     }
+
+    public function pairing(Request $request) 
+    {
+        try {
+            $req = coreModule();
+            $endpoint = "/api/v1/startup/admin/whatslite/pairing";
+            $req->setEndpoint($endpoint);
+            $data = $req->getList("user", [], []);
+            // dd($data);
+            return view('admin.qr', ['data' => $data->data]);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $resp = json_decode($e->getResponse()->getBody()->getContents());
+            dd($resp);
+            return back()->withInput()->withErrors(['msg' => $resp->message]);
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->withInput()->withErrors(['msg' => $e->getMessage()]);
+        }
+    }
 }

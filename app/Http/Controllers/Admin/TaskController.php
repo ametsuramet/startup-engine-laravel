@@ -27,8 +27,11 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         try {
+            $req =  coreModule();
+            $endpoint = "/api/v1/startup/admin/feature";
+            $req->setEndpoint($endpoint);
             $limit = 20;
-            $data = coreModule()->getList("task", ["limit" => $limit]);
+            $data = $req->getList("task", ["limit" => $limit]);
             $dataCol = new ModelCollection($data->data);
             $collection = $dataCol->transform(new TaskModel);
             // dd($collection);
@@ -41,7 +44,10 @@ class TaskController extends Controller
                 $page,
                 ['path' => url('admin/task')]
             );
-            $data = coreModule()->getList("user", ["limit" => 100]);
+            
+            
+            
+            $data = $req->getList("user", ["limit" => 100]);
             $dataCol = new ModelCollection($data->data);
             $collection = $dataCol->transform(new UserModel);
             $users = [];
